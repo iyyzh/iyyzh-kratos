@@ -7,28 +7,26 @@
 package main
 
 import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
 	"iyyzh-kratos/internal/biz"
 	"iyyzh-kratos/internal/conf"
 	"iyyzh-kratos/internal/data"
 	"iyyzh-kratos/internal/server"
 	"iyyzh-kratos/internal/service"
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
-// Injectors from wire.go:
-
-// wireApp init kratos application.
+//wireApp 生成的依赖注入代码 Injectors 服务使用者
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	realwordRepo := data.NewRealwordRepo(dataData, logger)
+	realwordUsecase := biz.NewRealwordUsecase(realwordRepo, logger)
+	realwordService := service.NewRealwordService(realwordUsecase)
+	grpcServer := server.NewGRPCServer(confServer, realwordService, logger)
+	httpServer := server.NewHTTPServer(confServer, realwordService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
