@@ -5,6 +5,11 @@ option go_package = "iyyzh-kratos/internal/conf;conf";
 
 import "google/protobuf/duration.proto";
 
+//5 conf层
+
+//配置config文件 以下使用protobuf定义字段
+//使用Makefile文件编写的命令 make config 生成 conf.pb.go 其他层调用 config.yaml 获得配置后的参数
+
 message Bootstrap {
   Server server = 1;
   Data data = 2;
@@ -33,8 +38,11 @@ message Data {
   message Redis {
     string network = 1;
     string addr = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
+    string password = 3;
+    int32 db = 4;
+    google.protobuf.Duration dial_timeout = 5;
+    google.protobuf.Duration read_timeout = 6;
+    google.protobuf.Duration write_timeout = 7;
   }
   Database database = 1;
   Redis redis = 2;

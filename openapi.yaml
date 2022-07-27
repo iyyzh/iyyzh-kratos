@@ -6,6 +6,25 @@ info:
     title: Realword API
     version: 0.0.1
 paths:
+    /api/order/{id}:
+        get:
+            tags:
+                - Realword
+            operationId: Realword_GetOrder
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/realword.v1.OrderReply'
     /api/user:
         put:
             tags:
@@ -23,7 +42,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.UpdateUserReply'
+                                $ref: '#/components/schemas/realword.v1.StateReply'
         post:
             tags:
                 - Realword
@@ -40,7 +59,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.CreateUserReply'
+                                $ref: '#/components/schemas/realword.v1.StateReply'
     /api/user/login:
         post:
             tags:
@@ -59,25 +78,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/realword.v1.LoginReply'
-    /api/user/{groupId}/group:
-        get:
-            tags:
-                - Realword
-            operationId: Realword_GetUserList
-            parameters:
-                - name: groupId
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: int64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/realword.v1.GetUserListReply'
     /api/user/{id}:
         get:
             tags:
@@ -96,7 +96,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.GetUserReply'
+                                $ref: '#/components/schemas/realword.v1.UserReply'
         delete:
             tags:
                 - Realword
@@ -114,32 +114,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.DeleteUserReply'
+                                $ref: '#/components/schemas/realword.v1.StateReply'
 components:
     schemas:
-        realword.v1.CreateUserReply:
-            type: object
-            properties:
-                ok:
-                    type: boolean
         realword.v1.CreateUserRequest:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/realword.v1.User'
-        realword.v1.DeleteUserReply:
-            type: object
-            properties:
-                ok:
-                    type: boolean
-        realword.v1.GetUserListReply:
-            type: object
-            properties:
-                user:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/realword.v1.User'
-        realword.v1.GetUserReply:
             type: object
             properties:
                 user:
@@ -156,7 +134,31 @@ components:
                     type: string
                 password:
                     type: string
-        realword.v1.UpdateUserReply:
+        realword.v1.Order:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                groupId:
+                    type: integer
+                    format: int64
+                orderName:
+                    type: string
+                commodityName:
+                    type: string
+                describe:
+                    type: string
+                createTime:
+                    type: string
+                userId:
+                    type: string
+        realword.v1.OrderReply:
+            type: object
+            properties:
+                order:
+                    $ref: '#/components/schemas/realword.v1.Order'
+        realword.v1.StateReply:
             type: object
             properties:
                 ok:
@@ -183,5 +185,10 @@ components:
                     type: string
                 sex:
                     type: string
+        realword.v1.UserReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/realword.v1.User'
 tags:
     - name: Realword

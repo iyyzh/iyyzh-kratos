@@ -8,8 +8,9 @@ server:
 data:
   database:
     driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test
+    source: root:123456@tcp(106.13.219.71:3308)/iyyzh-kratos?charset=utf8mb4&parseTime=True
   redis:
-    addr: 127.0.0.1:6379
+    addr: 106.13.219.71:6379
+    dial_timeout: 1s
     read_timeout: 0.2s
     write_timeout: 0.2s

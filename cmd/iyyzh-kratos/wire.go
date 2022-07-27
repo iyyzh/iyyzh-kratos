@@ -19,7 +19,7 @@ import (
 // wire.go Provider 服务提供者， wire_gen.go Injectors 服务使用者
 
 //使用 Makefile 编写的命令 make wire 命令生成编译期依赖注入代码 wire_gen.go
-//wireApp 初始化模块 依赖注入的入口 Provider 服务提供者
+//wireApp 初始化模块 依赖注入的入口
 func wireApp(*conf.Server, *conf.Data, log.Logger) (*kratos.App, func(), error) {
 	// 构建所有模块中的 ProviderSet，用于生成 wire_gen.go 自动依赖注入文件
 	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))

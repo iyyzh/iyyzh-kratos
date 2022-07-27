@@ -9,41 +9,43 @@ option go_package = "iyyzh-kratos/api/realword/v1;v1";
 //option java_package = "dev.kratos.api.realword.v1";
 //option java_outer_classname = "RealwordProtoV1";
 
-//接口入口api 以下使用protobuf定义接口
-//使用Makefile文件编写的命令 make api 生成
+//1 api层
+
+//外部访问入口 定义接口形参和返回内容 以下使用protobuf定义接口
+//使用Makefile文件编写的命令 make api 生成 api函数入口
 
 service Realword {
-  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+  rpc GetUser (GetUserRequest) returns (UserReply) {
     option (google.api.http) = {
       get: "/api/user/{id}",
     };
   }
-  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+  rpc CreateUser (CreateUserRequest) returns (StateReply) {
     option (google.api.http) = {
       post: "/api/user",
       body: "*",
     };
   }
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+  rpc UpdateUser (UpdateUserRequest) returns (StateReply) {
     option (google.api.http) = {
       put: "/api/user",
       body: "*",
     };
   }
-  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+  rpc DeleteUser (DeleteUserRequest) returns (StateReply) {
     option (google.api.http) = {
       delete: "/api/user/{id}",
-    };
-  }
-  rpc GetUserList (GetUserListRequest) returns (GetUserListReply) {
-    option (google.api.http) = {
-      get: "/api/user/{group_id}/group",
     };
   }
   rpc Login (LoginRequest) returns (LoginReply) {
     option (google.api.http) = {
       post: "/api/user/login",
       body: "*",
+    };
+  }
+  rpc GetOrder (GetOrderRequest) returns (OrderReply) {
+    option (google.api.http) = {
+      get: "/api/order/{id}",
     };
   }
 }
@@ -57,6 +59,16 @@ message User {
   string sex = 6;
 }
 
+message Order {
+  int64 id = 1;
+  int64 group_id = 2;
+  string order_name = 3;
+  string commodity_name = 4;
+  string describe = 5;
+  string create_time = 6;
+  string user_id = 7;
+}
+
 message LoginRequest {
   string account = 2;
   string password = 3;
@@ -66,19 +78,15 @@ message LoginReply {
   string token = 2;
 }
 
-message GetUserListRequest {
-  int64 group_id = 1;
-}
-
-message GetUserListReply {
-  repeated User user = 1;
+message StateReply {
+  bool ok = 2;
 }
 
 message GetUserRequest {
   int64 id = 1;
 }
 
-message GetUserReply {
+message UserReply {
   User user = 1;
 }
 
@@ -86,22 +94,18 @@ message CreateUserRequest {
   User user = 1;
 }
 
-message CreateUserReply {
-  bool ok = 2;
-}
-
 message UpdateUserRequest {
   User user = 1;
-}
-
-message UpdateUserReply {
-  bool ok = 2;
 }
 
 message DeleteUserRequest {
   int64 id = 1;
 }
 
-message DeleteUserReply {
-  bool ok = 2;
+message GetOrderRequest {
+  int64 id = 1;
+}
+
+message OrderReply {
+  Order order = 1;
 }

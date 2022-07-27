@@ -16,15 +16,22 @@ import (
 	"iyyzh-kratos/internal/service"
 )
 
-//wireApp 生成的依赖注入代码 Injectors 服务使用者
+// Injectors from wire.go:
+
+//使用 Makefile 编写的命令 make wire 命令生成编译期依赖注入代码 wire_gen.go
+//wireApp 初始化模块 依赖注入的入口
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	db := data.NewDB(confData, logger)
+	client := data.NewRedis(confData, logger)
+	dataData, cleanup, err := data.NewData(confData, logger, db, client)
 	if err != nil {
 		return nil, nil, err
 	}
-	realwordRepo := data.NewRealwordRepo(dataData, logger)
-	realwordUsecase := biz.NewRealwordUsecase(realwordRepo, logger)
-	realwordService := service.NewRealwordService(realwordUsecase)
+	userRepo := data.NewUserRepo(dataData, logger)
+	userUseCase := biz.NewUserUsecase(userRepo, logger)
+	orderRepo := data.NewOrderRepo(dataData, logger)
+	orderUseCase := biz.NewOrderUsecase(orderRepo, logger)
+	realwordService := service.NewRealwordService(userUseCase, orderUseCase)
 	grpcServer := server.NewGRPCServer(confServer, realwordService, logger)
 	httpServer := server.NewHTTPServer(confServer, realwordService, logger)
 	app := newApp(logger, grpcServer, httpServer)

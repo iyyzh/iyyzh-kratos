@@ -22,12 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RealwordClient interface {
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error)
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error)
-	GetUserList(ctx context.Context, in *GetUserListRequest, opts ...grpc.CallOption) (*GetUserListReply, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserReply, error)
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*StateReply, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*StateReply, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*StateReply, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderReply, error)
 }
 
 type realwordClient struct {
@@ -38,8 +38,8 @@ func NewRealwordClient(cc grpc.ClientConnInterface) RealwordClient {
 	return &realwordClient{cc}
 }
 
-func (c *realwordClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error) {
-	out := new(GetUserReply)
+func (c *realwordClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
 	err := c.cc.Invoke(ctx, "/realword.v1.Realword/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,8 +47,8 @@ func (c *realwordClient) GetUser(ctx context.Context, in *GetUserRequest, opts .
 	return out, nil
 }
 
-func (c *realwordClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error) {
-	out := new(CreateUserReply)
+func (c *realwordClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*StateReply, error) {
+	out := new(StateReply)
 	err := c.cc.Invoke(ctx, "/realword.v1.Realword/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *realwordClient) CreateUser(ctx context.Context, in *CreateUserRequest, 
 	return out, nil
 }
 
-func (c *realwordClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error) {
-	out := new(UpdateUserReply)
+func (c *realwordClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*StateReply, error) {
+	out := new(StateReply)
 	err := c.cc.Invoke(ctx, "/realword.v1.Realword/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -65,18 +65,9 @@ func (c *realwordClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, 
 	return out, nil
 }
 
-func (c *realwordClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error) {
-	out := new(DeleteUserReply)
+func (c *realwordClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*StateReply, error) {
+	out := new(StateReply)
 	err := c.cc.Invoke(ctx, "/realword.v1.Realword/DeleteUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *realwordClient) GetUserList(ctx context.Context, in *GetUserListRequest, opts ...grpc.CallOption) (*GetUserListReply, error) {
-	out := new(GetUserListReply)
-	err := c.cc.Invoke(ctx, "/realword.v1.Realword/GetUserList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,16 +83,25 @@ func (c *realwordClient) Login(ctx context.Context, in *LoginRequest, opts ...gr
 	return out, nil
 }
 
+func (c *realwordClient) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderReply, error) {
+	out := new(OrderReply)
+	err := c.cc.Invoke(ctx, "/realword.v1.Realword/GetOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RealwordServer is the server API for Realword service.
 // All implementations must embed UnimplementedRealwordServer
 // for forward compatibility
 type RealwordServer interface {
-	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
-	GetUserList(context.Context, *GetUserListRequest) (*GetUserListReply, error)
+	GetUser(context.Context, *GetUserRequest) (*UserReply, error)
+	CreateUser(context.Context, *CreateUserRequest) (*StateReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*StateReply, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*StateReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	GetOrder(context.Context, *GetOrderRequest) (*OrderReply, error)
 	mustEmbedUnimplementedRealwordServer()
 }
 
@@ -109,23 +109,23 @@ type RealwordServer interface {
 type UnimplementedRealwordServer struct {
 }
 
-func (UnimplementedRealwordServer) GetUser(context.Context, *GetUserRequest) (*GetUserReply, error) {
+func (UnimplementedRealwordServer) GetUser(context.Context, *GetUserRequest) (*UserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedRealwordServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error) {
+func (UnimplementedRealwordServer) CreateUser(context.Context, *CreateUserRequest) (*StateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedRealwordServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error) {
+func (UnimplementedRealwordServer) UpdateUser(context.Context, *UpdateUserRequest) (*StateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedRealwordServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error) {
+func (UnimplementedRealwordServer) DeleteUser(context.Context, *DeleteUserRequest) (*StateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
-}
-func (UnimplementedRealwordServer) GetUserList(context.Context, *GetUserListRequest) (*GetUserListReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
 }
 func (UnimplementedRealwordServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedRealwordServer) GetOrder(context.Context, *GetOrderRequest) (*OrderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
 }
 func (UnimplementedRealwordServer) mustEmbedUnimplementedRealwordServer() {}
 
@@ -212,24 +212,6 @@ func _Realword_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Realword_GetUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RealwordServer).GetUserList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/realword.v1.Realword/GetUserList",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RealwordServer).GetUserList(ctx, req.(*GetUserListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Realword_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginRequest)
 	if err := dec(in); err != nil {
@@ -244,6 +226,24 @@ func _Realword_Login_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RealwordServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Realword_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RealwordServer).GetOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/realword.v1.Realword/GetOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RealwordServer).GetOrder(ctx, req.(*GetOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -272,12 +272,12 @@ var Realword_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Realword_DeleteUser_Handler,
 		},
 		{
-			MethodName: "GetUserList",
-			Handler:    _Realword_GetUserList_Handler,
-		},
-		{
 			MethodName: "Login",
 			Handler:    _Realword_Login_Handler,
+		},
+		{
+			MethodName: "GetOrder",
+			Handler:    _Realword_GetOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
