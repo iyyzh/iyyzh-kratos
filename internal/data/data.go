@@ -12,9 +12,9 @@ import (
 	"gorm.io/gorm"
 )
 
-//4 data层 业务数据访问 管理数据库初始化 实现了 biz 的 repo 接口
+//4 基础设施层 业务数据访问 管理数据库初始化 实现了 biz 的 repo 接口 将领域对象重新拿出来
 
-// ProviderSet is 依赖注入 服务提供者
+// ProviderSet is 依赖注入
 var ProviderSet = wire.NewSet(NewData, NewDB, NewRedis, NewUserRepo, NewOrderRepo)
 
 // Data is 结构体 管理数据库连接

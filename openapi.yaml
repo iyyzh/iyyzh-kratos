@@ -6,6 +6,24 @@ info:
     title: Realword API
     version: 0.0.1
 paths:
+    /api/order:
+        post:
+            tags:
+                - Realword
+            operationId: Realword_CreateOrder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/realword.v1.CreateOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/realword.v1.CreateOrderReply'
     /api/order/{id}:
         get:
             tags:
@@ -24,17 +42,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.OrderReply'
+                                $ref: '#/components/schemas/realword.v1.GetOrderReply'
     /api/user:
         put:
             tags:
                 - Realword
-            operationId: Realword_UpdateUser
+            operationId: Realword_UpdateOrder
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/realword.v1.UpdateUserRequest'
+                            $ref: '#/components/schemas/realword.v1.UpdateOrderRequest'
                 required: true
             responses:
                 "200":
@@ -42,7 +60,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.StateReply'
+                                $ref: '#/components/schemas/realword.v1.UpdateOrderReply'
         post:
             tags:
                 - Realword
@@ -59,7 +77,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.StateReply'
+                                $ref: '#/components/schemas/realword.v1.CreateUserReply'
     /api/user/login:
         post:
             tags:
@@ -96,11 +114,11 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.UserReply'
+                                $ref: '#/components/schemas/realword.v1.GetUserReply'
         delete:
             tags:
                 - Realword
-            operationId: Realword_DeleteUser
+            operationId: Realword_DeleteOrder
             parameters:
                 - name: id
                   in: path
@@ -114,10 +132,41 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realword.v1.StateReply'
+                                $ref: '#/components/schemas/realword.v1.DeleteOrderReply'
 components:
     schemas:
+        realword.v1.CreateOrderReply:
+            type: object
+            properties:
+                orderName:
+                    type: string
+        realword.v1.CreateOrderRequest:
+            type: object
+            properties:
+                order:
+                    $ref: '#/components/schemas/realword.v1.Order'
+        realword.v1.CreateUserReply:
+            type: object
+            properties:
+                account:
+                    type: string
         realword.v1.CreateUserRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/realword.v1.User'
+        realword.v1.DeleteOrderReply:
+            type: object
+            properties: {}
+        realword.v1.DeleteUserReply:
+            type: object
+            properties: {}
+        realword.v1.GetOrderReply:
+            type: object
+            properties:
+                order:
+                    $ref: '#/components/schemas/realword.v1.Order'
+        realword.v1.GetUserReply:
             type: object
             properties:
                 user:
@@ -140,10 +189,9 @@ components:
                 id:
                     type: integer
                     format: int64
-                groupId:
-                    type: integer
-                    format: int64
                 orderName:
+                    type: string
+                shopName:
                     type: string
                 commodityName:
                     type: string
@@ -153,16 +201,19 @@ components:
                     type: string
                 userId:
                     type: string
-        realword.v1.OrderReply:
+        realword.v1.UpdateOrderReply:
+            type: object
+            properties: {}
+        realword.v1.UpdateOrderRequest:
             type: object
             properties:
                 order:
                     $ref: '#/components/schemas/realword.v1.Order'
-        realword.v1.StateReply:
+        realword.v1.UpdateUserReply:
             type: object
             properties:
-                ok:
-                    type: boolean
+                account:
+                    type: string
         realword.v1.UpdateUserRequest:
             type: object
             properties:
@@ -185,10 +236,6 @@ components:
                     type: string
                 sex:
                     type: string
-        realword.v1.UserReply:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/realword.v1.User'
+            description: 定义VO
 tags:
     - name: Realword

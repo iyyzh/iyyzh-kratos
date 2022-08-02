@@ -9,47 +9,65 @@ option go_package = "iyyzh-kratos/api/realword/v1;v1";
 //option java_package = "dev.kratos.api.realword.v1";
 //option java_outer_classname = "RealwordProtoV1";
 
-//1 api层
+//1 用户交互层 处理 web 请求 rpc 请求等
 
 //外部访问入口 定义接口形参和返回内容 以下使用protobuf定义接口
 //使用Makefile文件编写的命令 make api 生成 api函数入口
 
 service Realword {
-  rpc GetUser (GetUserRequest) returns (UserReply) {
-    option (google.api.http) = {
-      get: "/api/user/{id}",
-    };
-  }
-  rpc CreateUser (CreateUserRequest) returns (StateReply) {
-    option (google.api.http) = {
-      post: "/api/user",
-      body: "*",
-    };
-  }
-  rpc UpdateUser (UpdateUserRequest) returns (StateReply) {
-    option (google.api.http) = {
-      put: "/api/user",
-      body: "*",
-    };
-  }
-  rpc DeleteUser (DeleteUserRequest) returns (StateReply) {
-    option (google.api.http) = {
-      delete: "/api/user/{id}",
-    };
-  }
   rpc Login (LoginRequest) returns (LoginReply) {
     option (google.api.http) = {
       post: "/api/user/login",
       body: "*",
     };
   }
-  rpc GetOrder (GetOrderRequest) returns (OrderReply) {
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    option (google.api.http) = {
+      get: "/api/user/{id}",
+    };
+  }
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+    option (google.api.http) = {
+      post: "/api/user",
+      body: "*",
+    };
+  }
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      put: "/api/user",
+      body: "*",
+    };
+  }
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+    option (google.api.http) = {
+      delete: "/api/user/{id}",
+    };
+  }
+  rpc GetOrder (GetOrderRequest) returns (GetOrderReply) {
     option (google.api.http) = {
       get: "/api/order/{id}",
     };
   }
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderReply) {
+    option (google.api.http) = {
+      post: "/api/order",
+      body: "*",
+    };
+  }
+  rpc UpdateOrder (UpdateOrderRequest) returns (UpdateOrderReply) {
+    option (google.api.http) = {
+      put: "/api/user",
+      body: "*",
+    };
+  }
+  rpc DeleteOrder (DeleteOrderRequest) returns (DeleteOrderReply) {
+    option (google.api.http) = {
+      delete: "/api/user/{id}",
+    };
+  }
 }
 
+//定义VO
 message User {
   int64 id = 1;
   int64 group_id = 2;
@@ -61,8 +79,8 @@ message User {
 
 message Order {
   int64 id = 1;
-  int64 group_id = 2;
-  string order_name = 3;
+  string order_name = 2;
+  string shop_name = 3;
   string commodity_name = 4;
   string describe = 5;
   string create_time = 6;
@@ -70,23 +88,19 @@ message Order {
 }
 
 message LoginRequest {
-  string account = 2;
-  string password = 3;
+  string account = 1;
+  string password = 2;
 }
 
 message LoginReply {
-  string token = 2;
-}
-
-message StateReply {
-  bool ok = 2;
+  string token = 1;
 }
 
 message GetUserRequest {
   int64 id = 1;
 }
 
-message UserReply {
+message GetUserReply {
   User user = 1;
 }
 
@@ -94,18 +108,51 @@ message CreateUserRequest {
   User user = 1;
 }
 
+message CreateUserReply {
+  string account = 1;
+}
+
 message UpdateUserRequest {
   User user = 1;
+}
+
+message UpdateUserReply {
+  string account = 1;
 }
 
 message DeleteUserRequest {
   int64 id = 1;
 }
 
+message DeleteUserReply {
+}
+
 message GetOrderRequest {
   int64 id = 1;
 }
 
-message OrderReply {
+message GetOrderReply {
   Order order = 1;
+}
+
+message CreateOrderRequest {
+  Order order = 1;
+}
+
+message CreateOrderReply {
+  string order_name = 1;
+}
+
+message UpdateOrderRequest {
+  Order order = 1;
+}
+
+message UpdateOrderReply {
+}
+
+message DeleteOrderRequest {
+  int64 id = 1;
+}
+
+message DeleteOrderReply {
 }

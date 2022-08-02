@@ -19,112 +19,39 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationRealwordCreateOrder = "/realword.v1.Realword/CreateOrder"
 const OperationRealwordCreateUser = "/realword.v1.Realword/CreateUser"
+const OperationRealwordDeleteOrder = "/realword.v1.Realword/DeleteOrder"
 const OperationRealwordDeleteUser = "/realword.v1.Realword/DeleteUser"
 const OperationRealwordGetOrder = "/realword.v1.Realword/GetOrder"
 const OperationRealwordGetUser = "/realword.v1.Realword/GetUser"
 const OperationRealwordLogin = "/realword.v1.Realword/Login"
+const OperationRealwordUpdateOrder = "/realword.v1.Realword/UpdateOrder"
 const OperationRealwordUpdateUser = "/realword.v1.Realword/UpdateUser"
 
 type RealwordHTTPServer interface {
-	CreateUser(context.Context, *CreateUserRequest) (*StateReply, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*StateReply, error)
-	GetOrder(context.Context, *GetOrderRequest) (*OrderReply, error)
-	GetUser(context.Context, *GetUserRequest) (*UserReply, error)
+	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderReply, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
+	DeleteOrder(context.Context, *DeleteOrderRequest) (*DeleteOrderReply, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
+	GetOrder(context.Context, *GetOrderRequest) (*GetOrderReply, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*StateReply, error)
+	UpdateOrder(context.Context, *UpdateOrderRequest) (*UpdateOrderReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 }
 
 func RegisterRealwordHTTPServer(s *http.Server, srv RealwordHTTPServer) {
 	r := s.Route("/")
+	r.POST("/api/user/login", _Realword_Login0_HTTP_Handler(srv))
 	r.GET("/api/user/{id}", _Realword_GetUser0_HTTP_Handler(srv))
 	r.POST("/api/user", _Realword_CreateUser0_HTTP_Handler(srv))
 	r.PUT("/api/user", _Realword_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/api/user/{id}", _Realword_DeleteUser0_HTTP_Handler(srv))
-	r.POST("/api/user/login", _Realword_Login0_HTTP_Handler(srv))
 	r.GET("/api/order/{id}", _Realword_GetOrder0_HTTP_Handler(srv))
-}
-
-func _Realword_GetUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationRealwordGetUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUser(ctx, req.(*GetUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Realword_CreateUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationRealwordCreateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateUser(ctx, req.(*CreateUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*StateReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Realword_UpdateUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationRealwordUpdateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*StateReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Realword_DeleteUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationRealwordDeleteUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*StateReply)
-		return ctx.Result(200, reply)
-	}
+	r.POST("/api/order", _Realword_CreateOrder0_HTTP_Handler(srv))
+	r.PUT("/api/user", _Realword_UpdateOrder0_HTTP_Handler(srv))
+	r.DELETE("/api/user/{id}", _Realword_DeleteOrder0_HTTP_Handler(srv))
 }
 
 func _Realword_Login0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
@@ -146,6 +73,88 @@ func _Realword_Login0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context
 	}
 }
 
+func _Realword_GetUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordGetUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUser(ctx, req.(*GetUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_CreateUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordCreateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateUser(ctx, req.(*CreateUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_UpdateUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordUpdateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_DeleteUser0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordDeleteUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Realword_GetOrder0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetOrderRequest
@@ -163,18 +172,81 @@ func _Realword_GetOrder0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Cont
 		if err != nil {
 			return err
 		}
-		reply := out.(*OrderReply)
+		reply := out.(*GetOrderReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_CreateOrder0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateOrderRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordCreateOrder)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateOrder(ctx, req.(*CreateOrderRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateOrderReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_UpdateOrder0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateOrderRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordUpdateOrder)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateOrder(ctx, req.(*UpdateOrderRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateOrderReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Realword_DeleteOrder0_HTTP_Handler(srv RealwordHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteOrderRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRealwordDeleteOrder)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteOrder(ctx, req.(*DeleteOrderRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteOrderReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type RealwordHTTPClient interface {
-	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *StateReply, err error)
-	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *StateReply, err error)
-	GetOrder(ctx context.Context, req *GetOrderRequest, opts ...http.CallOption) (rsp *OrderReply, err error)
-	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
+	CreateOrder(ctx context.Context, req *CreateOrderRequest, opts ...http.CallOption) (rsp *CreateOrderReply, err error)
+	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
+	DeleteOrder(ctx context.Context, req *DeleteOrderRequest, opts ...http.CallOption) (rsp *DeleteOrderReply, err error)
+	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
+	GetOrder(ctx context.Context, req *GetOrderRequest, opts ...http.CallOption) (rsp *GetOrderReply, err error)
+	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
-	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *StateReply, err error)
+	UpdateOrder(ctx context.Context, req *UpdateOrderRequest, opts ...http.CallOption) (rsp *UpdateOrderReply, err error)
+	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
 }
 
 type RealwordHTTPClientImpl struct {
@@ -185,8 +257,21 @@ func NewRealwordHTTPClient(client *http.Client) RealwordHTTPClient {
 	return &RealwordHTTPClientImpl{client}
 }
 
-func (c *RealwordHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*StateReply, error) {
-	var out StateReply
+func (c *RealwordHTTPClientImpl) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...http.CallOption) (*CreateOrderReply, error) {
+	var out CreateOrderReply
+	pattern := "/api/order"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationRealwordCreateOrder))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RealwordHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserReply, error) {
+	var out CreateUserReply
 	pattern := "/api/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRealwordCreateUser))
@@ -198,8 +283,21 @@ func (c *RealwordHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserR
 	return &out, err
 }
 
-func (c *RealwordHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*StateReply, error) {
-	var out StateReply
+func (c *RealwordHTTPClientImpl) DeleteOrder(ctx context.Context, in *DeleteOrderRequest, opts ...http.CallOption) (*DeleteOrderReply, error) {
+	var out DeleteOrderReply
+	pattern := "/api/user/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationRealwordDeleteOrder))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RealwordHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*DeleteUserReply, error) {
+	var out DeleteUserReply
 	pattern := "/api/user/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRealwordDeleteUser))
@@ -211,8 +309,8 @@ func (c *RealwordHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserR
 	return &out, err
 }
 
-func (c *RealwordHTTPClientImpl) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...http.CallOption) (*OrderReply, error) {
-	var out OrderReply
+func (c *RealwordHTTPClientImpl) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...http.CallOption) (*GetOrderReply, error) {
+	var out GetOrderReply
 	pattern := "/api/order/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRealwordGetOrder))
@@ -224,8 +322,8 @@ func (c *RealwordHTTPClientImpl) GetOrder(ctx context.Context, in *GetOrderReque
 	return &out, err
 }
 
-func (c *RealwordHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*UserReply, error) {
-	var out UserReply
+func (c *RealwordHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserReply, error) {
+	var out GetUserReply
 	pattern := "/api/user/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRealwordGetUser))
@@ -250,8 +348,21 @@ func (c *RealwordHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, op
 	return &out, err
 }
 
-func (c *RealwordHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*StateReply, error) {
-	var out StateReply
+func (c *RealwordHTTPClientImpl) UpdateOrder(ctx context.Context, in *UpdateOrderRequest, opts ...http.CallOption) (*UpdateOrderReply, error) {
+	var out UpdateOrderReply
+	pattern := "/api/user"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationRealwordUpdateOrder))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RealwordHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserReply, error) {
+	var out UpdateUserReply
 	pattern := "/api/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRealwordUpdateUser))

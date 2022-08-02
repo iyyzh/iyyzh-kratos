@@ -28,9 +28,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		return nil, nil, err
 	}
 	userRepo := data.NewUserRepo(dataData, logger)
-	userUseCase := biz.NewUserUsecase(userRepo, logger)
+	userUseCase := biz.NewUserUseCase(userRepo, logger)
 	orderRepo := data.NewOrderRepo(dataData, logger)
-	orderUseCase := biz.NewOrderUsecase(orderRepo, logger)
+	orderUseCase := biz.NewOrderUseCase(orderRepo, logger)
 	realwordService := service.NewRealwordService(userUseCase, orderUseCase)
 	grpcServer := server.NewGRPCServer(confServer, realwordService, logger)
 	httpServer := server.NewHTTPServer(confServer, realwordService, logger)

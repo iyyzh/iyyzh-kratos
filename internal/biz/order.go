@@ -18,10 +18,22 @@ type OrderUseCase struct {
 	log  *log.Helper
 }
 
-func NewOrderUsecase(repo OrderRepo, logger log.Logger) *OrderUseCase {
+func NewOrderUseCase(repo OrderRepo, logger log.Logger) *OrderUseCase {
 	return &OrderUseCase{repo: repo, log: log.NewHelper(logger)}
 }
 
-func (s *OrderUseCase) GetOrder(ctx context.Context, in *v1.GetOrderRequest) (*v1.OrderReply, error) {
+func (s *OrderUseCase) GetOrder(ctx context.Context, in *v1.GetOrderRequest) (*v1.GetOrderReply, error) {
+	return nil, nil
+}
+
+func (s *OrderUseCase) CreateOrder(ctx context.Context, in *v1.CreateOrderRequest) (*v1.CreateOrderReply, error) {
+	return nil, nil
+}
+
+func (s *OrderUseCase) UpdateOrder(ctx context.Context, in *v1.UpdateOrderRequest) (*v1.UpdateOrderReply, error) {
+	return nil, nil
+}
+
+func (s *OrderUseCase) DeleteOrder(ctx context.Context, in *v1.DeleteOrderRequest) (*v1.DeleteOrderReply, error) {
 	return nil, nil
 }
